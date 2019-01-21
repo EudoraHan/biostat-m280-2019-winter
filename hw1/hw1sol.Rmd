@@ -70,7 +70,14 @@ Please, do **not** put these data files into Git; they are big. Also do **not** 
     ```
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
 
-0. What's the difference between the following two commands?
+    ```{bash eval=FALSE}
+    filename="pride_and_prejudice.txt"
+    for name in Elizabeth Jane Lydia Darcy  
+       do echo "${name} - `grep -io "${name}" ${filename} | wc -l`,"
+    done
+    ```
+
+2. What's the difference between the following two commands?
     ```{bash eval=FALSE}
     echo 'hello, world' > test1.txt
     ```
@@ -78,8 +85,10 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
     ```{bash eval=FALSE}
     echo 'hello, world' >> test2.txt
     ```
+    **Solution** After executing each command twice in a row and then examining the output files. I find that there are two 'hello, world' in test2, while only one in test1.
+    Since command ">" directs output from one command to a file, while command ">>" appends output from one command to a file.
 
-0. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
+3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
     ```{bash eval=FALSE}
     #!/bin/sh
     # Select lines from the middle of a file.
@@ -92,6 +101,18 @@ Using `chmod` make the file executable by the owner, and run
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
+    ```{bash eval=FALSE}
+     vi middle.sh
+     chmod 764 middle.sh 
+    ./middle.sh pride_and_prejudice.txt 20 5
+    ```
+    
+    The output is the 16-20 lines in pride_and_prejudice.txt.
+    
+    The `"$1"`,`"$2"`, and `"$3"` are the first, second and third column of the commend. In this question, they are `pride_and_prejudice.txt`, `20` and `5` seperately. Thus, the whole commend in middle.sh means we print the first 20 lines of the file pride_and_prejudice.txt, then print the last 5 lines of the output.
+    
+    If the file that this script lives in is executable, the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it's /bin/sh, for example.
+    
 ## Q4. R Batch Run
 
 In class we discussed using R to organize simulation studies. 

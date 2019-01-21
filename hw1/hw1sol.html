@@ -241,11 +241,16 @@ ls -l /home/m280data/NYCHVS
 <ol style="list-style-type: decimal">
 <li><p>You and your friend just have finished reading <em>Pride and Prejudice</em> by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <a href="https://www.gutenberg.org/files/1342/1342.txt" class="uri">https://www.gutenberg.org/files/1342/1342.txt</a> and save to your local folder.</p>
 <pre class="bash"><code>curl https://www.gutenberg.org/files/1342/1342.txt &gt; pride_and_prejudice.txt</code></pre>
-<p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p></li>
+<p>Do <strong>not</strong> put this text file <code>pride_and_prejudice.txt</code> in Git. Using a <code>for</code> loop, how would you tabulate the number of times each of the four characters is mentioned?</p>
+<pre class="bash"><code>filename=&quot;pride_and_prejudice.txt&quot;
+for name in Elizabeth Jane Lydia Darcy  
+   do echo &quot;${name} - `grep -io &quot;${name}&quot; ${filename} | wc -l`,&quot;
+done</code></pre></li>
 <li><p>What’s the difference between the following two commands?</p>
 <pre class="bash"><code>echo 'hello, world' &gt; test1.txt</code></pre>
 <p>and</p>
-<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre></li>
+<pre class="bash"><code>echo 'hello, world' &gt;&gt; test2.txt</code></pre>
+<p><strong>Solution</strong> After executing each command twice in a row and then examining the output files. I find that there are two ‘hello, world’ in test2, while only one in test1. Since command “&gt;” directs output from one command to a file, while command “&gt;&gt;” appends output from one command to a file.</p></li>
 <li><p>Using your favorite text editor (e.g., <code>vi</code>), type the following and save the file as <code>middle.sh</code>:</p>
 <pre class="bash"><code>#!/bin/sh
 # Select lines from the middle of a file.
@@ -253,7 +258,13 @@ ls -l /home/m280data/NYCHVS
 head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <p>Using <code>chmod</code> make the file executable by the owner, and run</p>
 <pre class="bash"><code>./middle.sh pride_and_prejudice.txt 20 5</code></pre>
-<p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script?</p></li>
+<p>Explain the output. Explain the meaning of <code>&quot;$1&quot;</code>, <code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> in this shell script. Why do we need the first line of the shell script?</p>
+<pre class="bash"><code> vi middle.sh
+ chmod 764 middle.sh 
+./middle.sh pride_and_prejudice.txt 20 5</code></pre>
+<p>The output is the 16-20 lines in pride_and_prejudice.txt.</p>
+<p>The <code>&quot;$1&quot;</code>,<code>&quot;$2&quot;</code>, and <code>&quot;$3&quot;</code> are the first, second and third column of the commend. In this question, they are <code>pride_and_prejudice.txt</code>, <code>20</code> and <code>5</code> seperately. Thus, the whole commend in middle.sh means we print the first 20 lines of the file pride_and_prejudice.txt, then print the last 5 lines of the output.</p>
+<p>If the file that this script lives in is executable, the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it’s /bin/sh, for example.</p></li>
 </ol>
 </div>
 <div id="q4.-r-batch-run" class="section level2">
