@@ -195,7 +195,7 @@ $(document).ready(function () {
 <h2>Q1. Git/GitHub</h2>
 <p><strong>No handwritten homework reports are accepted for this course.</strong> We work with Git and GitHub. Efficient and abundant use of Git, e.g., frequent and well-documented commits, is an important criterion for grading your homework.</p>
 <ol style="list-style-type: decimal">
-<li><p>Apply for the <a href="https://education.github.com/pack">Student Developer Pack</a> at GitHub using your UCLA email.</p></li>
+<li><p>Apply for the <a href="https://education.github.com/pack">Student Developer Pack</a> at GitHub using your UCLA email. -</p></li>
 <li><p>Create a <strong>private</strong> repository <code>biostat-m280-2019-winter</code> and add <code>Hua-Zhou</code> and <code>juhkim111</code> as your collaborators with write permission.</p></li>
 <li><p>Top directories of the repository should be <code>hw1</code>, <code>hw2</code>, … Maintain two branches <code>master</code> and <code>develop</code>. The <code>develop</code> branch will be your main playground, the place where you develop solution (code) to homework problems and write up report. The <code>master</code> branch will be your presentation area. Submit your homework files (R markdown file <code>Rmd</code>, <code>html</code> file converted from R markdown, all code and data sets to reproduce results) in <code>master</code> branch.</p></li>
 <li><p>After each homework due date, teaching assistant and instructor will check out your master branch for grading. Tag each of your homework submissions with tag names <code>hw1</code>, <code>hw2</code>, … Tagging time will be used as your submission time. That means if you tag your <code>hw1</code> submission after deadline, penalty points will be deducted for late submission.</p></li>
@@ -223,8 +223,13 @@ ls -l /home/m280data/NYCHVS
 ```</code></pre>
 <p>Please, do <strong>not</strong> put these data files into Git; they are big. Also do <strong>not</strong> copy them into your directory. Just read from the data folder <code>/home/m280data/NYCHVS</code> directly. Use Bash commands to answer following questions.</p>
 <ol style="list-style-type: decimal">
-<li><p>Display the first few lines of <code>NYCHVS_1991.csv</code>. <strong>solution</strong></p>
-<pre class="bash"><code>head NYCHVS_1991.csv</code></pre></li>
+<li>Display the first few lines of <code>NYCHVS_1991.csv</code>.</li>
+</ol>
+<p><strong>Solution</strong></p>
+<pre><code>```bash
+head NYCHVS_1991.csv
+```</code></pre>
+<ol start="2" style="list-style-type: decimal">
 <li><p>Display number of lines in each <code>csv</code> file.</p>
 <pre class="bash"><code>wc -l *csv</code></pre></li>
 <li><p>Display the 3 files that have the least number of lines</p>
@@ -275,8 +280,80 @@ head -n &quot;$2&quot; &quot;$1&quot; | tail -n &quot;$3&quot;</code></pre>
 <ol style="list-style-type: decimal">
 <li><p>Expand the <a href="http://hua-zhou.github.io/teaching/biostatm280-2019winter/slides/02-linux/runSim.R"><code>runSim.R</code></a> script to include arguments <code>seed</code> (random seed), <code>n</code> (sample size), <code>dist</code> (distribution) and <code>rep</code> (number of simulation replicates). When <code>dist=&quot;gaussian&quot;</code>, generate data from standard normal; when <code>dist=&quot;t1&quot;</code>, generate data from t-distribution with degree of freedom 1 (same as Cauchy distribution); when <code>dist=&quot;t5&quot;</code>, generate data from t-distribution with degree of freedom 5. Calling <code>runSim.R</code> will (1) set random seed according to argument <code>seed</code>, (2) generate data according to argument <code>dist</code>, (3) compute the primed-indexed average estimator and the classical sample average estimator for each simulation replicate, (4) report the average mean squared error (MSE) <span class="math display">\[
   \frac{\sum_{r=1}^{\text{rep}} (\widehat \mu_r - \mu_{\text{true}})^2}{\text{rep}}
-\]</span> for both methods.</p></li>
-<li><p>Modify the <a href="http://hua-zhou.github.io/teaching/biostatm280-2019winter/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 280</code>.</p></li>
+\]</span> for both methods.</p>
+<p><strong>Solution:</strong> Here is my <code>runSimR</code> code:</p>
+<pre class="bash"><code>cat runSim.R
+</code></pre>
+<pre><code>## ## parsing command arguments
+## for (arg in commandArgs(TRUE)) {
+##   eval(parse(text = arg))
+## }
+## 
+## ## 1.set random seed
+## set.seed (seed)
+## 
+## ## 2. generate data according to different argument
+## distribution = function(dist) {
+##   if (dist == &quot;gaussian&quot;){
+##     x = rnorm(n)
+##   }
+##   else if (dist == &quot;t1&quot;){
+##     x = rt(n,1)
+##   }
+##   else if (dist==&quot;t5&quot;){
+##     x = rt(n,5)
+##   }
+## }
+## 
+## ## 3.compute the primed-indexed average estimator
+## ## check if a given integer is prime
+## isPrime = function(n) {
+##   if (n &lt;= 3) {
+##     return (TRUE)
+##   }
+##   if (any((n %% 2:floor(sqrt(n))) == 0)) {
+##     return (FALSE)
+##   }
+##   return (TRUE)
+## }
+## 
+## ## estimate mean only using observation with prime indices
+## estMeanPrimes = function (x) {
+##   n = length(x)
+##   ind = sapply(1:n, isPrime)
+##   return (mean(x[ind]))
+## }
+## 
+## ## 4.compute the primed-indexed average estimator MSE
+## PrimeAve &lt;- replicate(rep, estMeanPrimes(distribution(dist)))
+## msePrimeAve &lt;- sum(PrimeAve^2)/rep
+## 
+## ## compute the classical sample average estimator MSE
+## SampleAve &lt;- replicate(rep, mean(distribution(dist)))
+## mseSampleAve &lt;- sum(SampleAve^2)/rep
+## 
+## print(c(msePrimeAve,mseSampleAve))</code></pre>
+<p>Let us test run with <code>n=100</code>:</p>
+<pre class="bash"><code>Rscript runSim.R seed=1234 n=10000 dist=\&quot;t1\&quot; rep=10
+</code></pre>
+<pre><code>## [1]   0.5400827 381.3205320</code></pre></li>
+<li><p>Modify the <a href="http://hua-zhou.github.io/teaching/biostatm280-2019winter/slides/02-linux/autoSim.R"><code>autoSim.R</code></a> script to run simulations with combinations of sample sizes <code>nVals = seq(100, 500, by=100)</code> and distributions <code>distTypes = c(&quot;gaussian&quot;, &quot;t1&quot;, &quot;t5&quot;)</code> and write output to appropriately named files. Use <code>rep = 50</code>, and <code>seed = 280</code>.</p>
+<p><strong>Solution:</strong> Here is my <code>autoSim.R</code> code:</p>
+<pre class="bash"><code>cat autoSim.R</code></pre>
+<pre><code>## # autoSim.R
+## nVals = seq(100, 500, by = 100)
+## distTypes = c(&quot;gaussian&quot;, &quot;t5&quot;, &quot;t1&quot;)
+## 
+## for (n in nVals) {
+##   for (dist in distTypes) {
+##     oFile &lt;- paste(&quot;n&quot;, n, &quot;dist&quot;, dist, &quot;.txt&quot;, sep=&quot;&quot;)
+##     sysCall &lt;- paste(&quot;nohup Rscript runSim.R n=&quot;, n, 
+##                      &quot; dist=&quot;, shQuote(shQuote(dist)), &quot; seed=&quot;, 280, 
+##                      &quot; rep=&quot;, 50, &quot; &gt; &quot;, oFile, sep=&quot;&quot;)
+##     system(sysCall)
+##     print(paste(&quot;sysCall=&quot;, sysCall, sep=&quot;&quot;))
+##   }
+## }</code></pre></li>
 <li><p>Write an R script to collect simulation results from output files and print average MSEs in a table of format</p></li>
 </ol>
 <table>
