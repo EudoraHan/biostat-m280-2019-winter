@@ -1,5 +1,6 @@
 ---
 title: "Biostat M280 Homework 1"
+author: "Yun Han <yunh@g.ucla.edu>"
 subtitle: Due Jan 25 @ 11:59PM
 output: html_document
 ---
