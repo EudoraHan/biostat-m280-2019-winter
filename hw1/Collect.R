@@ -21,3 +21,4 @@ for (dist in distTypes){
 table <- data.frame(n = N, Method = Avg, Gaussian = result[1:10], 
                     t5 = result[11:20], t1 = result[21:30])
 table
+

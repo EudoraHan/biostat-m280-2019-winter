@@ -52,3 +52,4 @@ mseSampleAve <- sum(SampleAve^2)/rep
 print(c(msePrimeAve,mseSampleAve))
 
 
+

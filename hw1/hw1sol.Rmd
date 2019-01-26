@@ -169,7 +169,7 @@ for both methods.
 
 
 
-    **Solution:** Here is my code for collecting data from output files and printing them in a table:
+    **Solution:** Here is my code for collecting data from output files and printing them into a table:
     ```{bash}
     cat Collect.R
     ```
@@ -178,4 +178,5 @@ for both methods.
     ```{bash}
     Rscript Collect.R 
     ``` 
+
 
