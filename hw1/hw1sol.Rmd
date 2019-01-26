@@ -22,61 +22,70 @@ knitr::opts_chunk$set(echo = TRUE)
 4. After each homework due date, teaching assistant and instructor will check out your master branch for grading. Tag each of your homework submissions with tag names `hw1`, `hw2`, ... Tagging time will be used as your submission time. That means if you tag your `hw1` submission after deadline, penalty points will be deducted for late submission.
 
 ## Q2. Linux Shell Commands
+The `/home/m280data/NYCHVS` folder on teaching server contains a data set from the New York City Housing and Vacancy Survey. See [2019 ASA Data Challenge Expo](https://www1.nyc.gov/site/hpd/about/nychvs-asa-data-challenge-expo.page) for further details. 
 
-The `/home/m280data/NYCHVS` folder on teaching server contains a data set from the New York City Housing and Vacancy Survey. See [2019 ASA Data Challenge Expo](https://www1.nyc.gov/site/hpd/about/nychvs-asa-data-challenge-expo.page) for further details.  
     ```{bash}
     ls -l /home/m280data/NYCHVS
     ```
+
 Please, do **not** put these data files into Git; they are big. Also do **not** copy them into your directory. Just read from the data folder `/home/m280data/NYCHVS` directly. Use Bash commands to answer following questions.
 
 1. Display the first few lines of `NYCHVS_1991.csv`.
 
-   **Solution**
-   
-    ```{bash, eval=FALSE}
+    **Solution：**Here is the command used to display the first few lines of `NYCHVS_1991.csv`.
+    ```{bash}
+    cd /home/m280data/NYCHVS/
     head NYCHVS_1991.csv
     ```
     
 2. Display number of lines in each `csv` file.
-
-    ```{bash, eval=FALSE}
-    wc -l *csv
+   
+    **Solution：**Here is the command used to display number of lines in each `csv` file.
+    ```{bash}
+    wc -l /home/m280data/NYCHVS/*csv
     ```
     
 3. Display the 3 files that have the least number of lines
 
-    ```{bash, eval=FALSE}
+    **Solution：**Here is the command used to display the 3 files that have the least number of lines.
+    ```{bash}
+    cd /home/m280data/NYCHVS/
     wc -l  *csv | sort | head -3
     ```
     
 4. What's the output of following bash script?
 
-    ```{bash, eval=FALSE}
+    ```{bash}
     for datafile in /home/m280data/NYCHVS/*.csv
       do
         ls $datafile
       done
     ```
-
+   
+    **Solution：**The output display the path that we use to open all csv files in NYCHVS.
+    
 5. What unique values does the second variable `borough` take in `NYCHVS_1991.csv`? Tabulate how many times each value appears.
 
-    ```{bash, eval=FALSE}
-    awk -F, '{ print $2 }' NYCHVS_1991.csv | sort | uniq -c| sort -nr
+    **Solution：**The second variable `borough` take 1-5 as unique values. And the time each value appears is displayed as follows.
+    ```{bash}
+    cd /home/m280data/NYCHVS/
+    awk -F, '{ if (NR > 2) print $2 }' NYCHVS_1991.csv | sort | uniq -c
     ```
 
 
 ## Q3. More fun with shell
 
 1. You and your friend just have finished reading *Pride and Prejudice* by Jane Austen. Among the four main characters in the book, Elizabeth, Jane, Lydia, and Darcy, your friend thinks that Darcy was the most mentioned. You, however, are certain it was Elizabeth. Obtain the full text of the novel from <https://www.gutenberg.org/files/1342/1342.txt> and save to your local folder. 
-    ```{bash, eval=FALSE}
+    ```{bash eval=FALSE}
     curl https://www.gutenberg.org/files/1342/1342.txt > pride_and_prejudice.txt
     ```
 Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` loop, how would you tabulate the number of times each of the four characters is mentioned?
 
-    ```{bash eval=FALSE}
+    **Solution：**Here are the commands I used to tabulate the number of times each of the four characters is mentioned. And from the results we can know that Elizabeth was the most mentioned character. 
+    ```{bash}
     filename="pride_and_prejudice.txt"
     for name in Elizabeth Jane Lydia Darcy  
-       do echo "${name} - `grep -io "${name}" ${filename} | wc -l`,"
+       do echo "${name} - `grep "${name}" ${filename} | wc -l`,"
     done
     ```
 
@@ -88,8 +97,9 @@ Do **not** put this text file `pride_and_prejudice.txt` in Git. Using a `for` lo
     ```{bash eval=FALSE}
     echo 'hello, world' >> test2.txt
     ```
-    **Solution** After executing each command twice in a row and then examining the output files. I find that there are two 'hello, world' in test2, while only one in test1.
-    Since command ">" directs output from one command to a file, while command ">>" appends output from one command to a file.
+
+    **Solution:** After executing each command twice in a row and then examining the output files. I find that there are two 'hello, world' in test2, while only one in test1.
+    The reason for that is command ">" directs output from one command to a file, while command ">>" appends output from one command to a file.
 
 3. Using your favorite text editor (e.g., `vi`), type the following and save the file as `middle.sh`:
     ```{bash eval=FALSE}
@@ -104,17 +114,23 @@ Using `chmod` make the file executable by the owner, and run
     ```
 Explain the output. Explain the meaning of `"$1"`, `"$2"`, and `"$3"` in this shell script. Why do we need the first line of the shell script?
 
+    **Solution:**Here are the commands I used to make the file executable by the the owner. 
     ```{bash eval=FALSE}
      vi middle.sh
      chmod 764 middle.sh 
-    ./middle.sh pride_and_prejudice.txt 20 5
     ```
+    Then we run this command and get the output as follows.
+    ```{bash}
+    ./middle.sh pride_and_prejudice.txt 20 5
+    ``` 
     
     The output is the 16-20 lines in pride_and_prejudice.txt.
     
-    The `"$1"`,`"$2"`, and `"$3"` are the first, second and third column of the commend. In this question, they are `pride_and_prejudice.txt`, `20` and `5` seperately. Thus, the whole commend in middle.sh means we print the first 20 lines of the file pride_and_prejudice.txt, then print the last 5 lines of the output.
+    The `"$1"`,`"$2"`, and `"$3"` are the first, second and third column of the commend. In this question, they are `pride_and_prejudice.txt`, `20` and `5` seperately.
     
-    If the file that this script lives in is executable, the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it's /bin/sh, for example.
+    Thus, the whole command in middle.sh means we print the first  `"$2"` lines of the file `"$1"`, then print the last `"$3"` lines of the output.
+    
+    We need the first line of the shell script because if the file that this script lives in is executable, the hash-bang (#!) tells the operating system what interpreter to use to run the script. In this case it's /bin/sh, for example.
     
 ## Q4. R Batch Run
 
@@ -129,13 +145,11 @@ for both methods.
     **Solution:** Here is my `runSimR` code:
     ```{bash }
     cat runSim.R
-    
     ```
 
-    Let us test run with `n=100`:
+    Let us test `runSiM.R` with ` seed = 1234 n = 100 dist = t1 rep = 10`:
     ```{bash }
-    Rscript runSim.R seed=1234 n=10000 dist=\"t1\" rep=10
-    
+    Rscript runSim.R seed=1234 n=100 dist=\"t1\" rep=10
     ```
     
     
@@ -145,22 +159,23 @@ for both methods.
     ```{bash}
     cat autoSim.R
     ```
-    
-    
 
+    ```{bash}
+    Rscript autoSim.R
+    ```    
+    
 
 3. Write an R script to collect simulation results from output files and print average MSEs in a table of format
 
-| $n$ | Method   | Gaussian | $t_5$ | $t_1$ |
-|-----|----------|-------|-------|----------|
-| 100 | PrimeAvg |       |       |          |
-| 100 | SampAvg  |       |       |          |
-| 200 | PrimeAvg |       |       |          |
-| 200 | SampAvg  |       |       |          |
-| 300 | PrimeAvg |       |       |          |
-| 300 | SampAvg  |       |       |          |
-| 400 | PrimeAvg |       |       |          |
-| 400 | SampAvg  |       |       |          |
-| 500 | PrimeAvg |       |       |          |
-| 500 | SampAvg  |       |       |          |
+
+
+    **Solution:** Here is my code for collecting data from output files and printing them in a table:
+    ```{bash}
+    cat Collect.R
+    ```
+
+    Here is the table that I got.
+    ```{bash}
+    Rscript Collect.R 
+    ``` 
 

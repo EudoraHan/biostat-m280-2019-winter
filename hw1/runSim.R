@@ -38,11 +38,14 @@ estMeanPrimes = function (x) {
   return (mean(x[ind]))
 }
 
-## 4.compute the primed-indexed average estimator MSE
+## 4.compute the MSE
+## compute the primed-indexed average estimator MSE
+set.seed (seed)
 PrimeAve <- replicate(rep, estMeanPrimes(distribution(dist)))
 msePrimeAve <- sum(PrimeAve^2)/rep
 
 ## compute the classical sample average estimator MSE
+set.seed (seed)
 SampleAve <- replicate(rep, mean(distribution(dist)))
 mseSampleAve <- sum(SampleAve^2)/rep
 
