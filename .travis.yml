@@ -20,5 +20,5 @@ os:
   - linux
   - osx
 r:
-  -oldrel
-  -release
+  - oldrel
+  - release
