@@ -13,9 +13,7 @@ Develop branch build status:[![Build Status](https://travis-ci.com/EudoraHan/bio
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-<p align="center">
-  <img src="./fizzbuzz.jpg" height="375">
-</p>
+
 
 ## Q1. Travis CI
 
@@ -23,9 +21,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 2. Set up Travis CI for your homework 2 solution, e.g., `hw2sol.Rmd`. Graders will look for a CI passing badge on the `README.Rmd` page of your repository:
 
-<p align="center">
-  <img src="./passing.svg" height="175">
-</p>
 
 
 ## Q2. FizzBuzz Test
