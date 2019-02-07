@@ -1,4 +1,18 @@
-title: FizzBuzz Game
-author: Yun Han <yunh@g.ucla.edu>
-subtitle: Due Feb 8 @ 11:59PM
-output: html_document
+Title: FizzBuzz Game
+Author: Yun Han <yunh@g.ucla.edu>
+Data: 2019-02-05
+Output: html_document
+Imports:
+   rmarkdown
+   neotoma
+   purrr
+   ggplot2
+   plyr
+   reshape2
+   mgcv
+   Bchron
+   viridis
+   dplyr
+   readr
+   gridExtra
+   Rcpp
