@@ -9,21 +9,17 @@ void fzbz(StringVector nums) {
   for(int i = 0; i < n; ++i) {
     char* arry = nums[i];
     int c = 0;
-    if (strlen(arry) == 1 && arry[0] == '0')
-    {
+    if (strlen(arry) == 1 && arry[0] == '0') {
       c = 0;
     }
-    else
-    {
+    else {
       float temp = atof(arry);
-      if (temp == 0)
-      {
+      if (temp == 0) {
         std::cout << "Not a number!" << std::endl;
         continue;
       }
-      else{
-        if (atoi(arry) - atof(arry) != 0)
-        {
+      else {
+        if (atoi(arry) - atof(arry) != 0) {
           std::cout << "Please input an integer!" << std::endl;
           continue;
         }

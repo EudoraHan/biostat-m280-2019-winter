@@ -1,18 +1,8 @@
 Title: FizzBuzz Game
+Version: 0.1.0
 Author: Yun Han <yunh@g.ucla.edu>
 Data: 2019-02-05
 Output: html_document
 Imports:
    rmarkdown
-   neotoma
-   purrr
-   ggplot2
-   plyr
-   reshape2
-   mgcv
-   Bchron
-   viridis
-   dplyr
-   readr
-   gridExtra
    Rcpp
