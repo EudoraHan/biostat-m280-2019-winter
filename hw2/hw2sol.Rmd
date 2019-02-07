@@ -5,9 +5,9 @@ subtitle: Due Feb 8 @ 11:59PM
 output: html_document
 ---
 
-Develop branch build status:[![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=develop)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
+Develop branch build status: [![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=develop)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
 
-Master branch build status:[![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=master)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
+Master branch build status: [![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=master)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
 
 
 ```{r setup, include=FALSE}
@@ -35,8 +35,21 @@ The FizzBuzz test is a common programming interview question used to establish i
     You must also include a write up of your implementation that broadly describes how you approached the problem and constructed your solution (think something along the lines of the methods section of a journal article).
 
     This is not a terribly complex or difficult task, and solutions in R and many other languages are easily Googleable - the point of this exercise is again to get used to the workflow and tools: RStudio, RMarkdown, Git/GitHub, Travis, etc.
-
+    
+    **Solution:** Here is my `FizzBuzz` code:
+    ```{bash }
+    cat FizzBuzz.R
+    ```
+    
 2. Use your FizzBuzz function to display the correct output for a variety of inputs, make sure to show what happens for both good and bad input. 
+
+    Let us test `FizzBuzz.R`:
+    ```{r}
+    fizzbuzz(c(5:15))
+    fizzbuzz("Hello,world")
+    fizzbuzz(Inf)
+    fizzbuzz(2.3)
+    ```
 
 ## Q3. Rcpp
 
@@ -44,3 +57,17 @@ The FizzBuzz test is a common programming interview question used to establish i
 
 2. Re-do FizzBuzz test using Rcpp. 
 
+    **Solution:** Here is my `FizzBuzz` test using Rcpp:
+    ```{bash }
+    cat fizzbuzz.cpp
+    ```
+
+    Let's complie the code and test the function.
+    ```{r}
+    library(Rcpp)
+    sourceCpp('fizzbuzz.cpp')
+    fzbz(c(5:15))
+    fzbz("Hello,world")
+    fzbz(Inf)
+    fzbz(2.3)
+    ```
