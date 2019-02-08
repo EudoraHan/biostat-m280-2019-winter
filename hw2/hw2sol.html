@@ -212,7 +212,8 @@ $(document).ready(function () {
 <p>This is not a terribly complex or difficult task, and solutions in R and many other languages are easily Googleable - the point of this exercise is again to get used to the workflow and tools: RStudio, RMarkdown, Git/GitHub, Travis, etc.</p>
 <p><strong>Solution:</strong> Here is my <code>FizzBuzz</code> code:</p>
 <pre class="bash"><code>cat FizzBuzz.R</code></pre>
-<pre><code>## # Check if the input is valid
+<pre><code>## #FizzBuzz Test
+## # Check if the input is valid
 ## # For multiples of 3 print &quot;Fizz&quot;
 ## # For multiples of 5 print &quot;Buzz&quot;
 ## # For multiples of both print &quot;FizzBuzz&quot;
@@ -238,7 +239,26 @@ $(document).ready(function () {
 ##   }
 ## }</code></pre></li>
 <li><p>Use your FizzBuzz function to display the correct output for a variety of inputs, make sure to show what happens for both good and bad input.</p>
-<p>Let us test <code>FizzBuzz.R</code>:</p></li>
+<p>Let us test <code>FizzBuzz.R</code>:</p>
+<pre class="r"><code>source(&quot;FizzBuzz.R&quot;)
+fizzbuzz(c(5:15))</code></pre>
+<pre><code>## [1] &quot;Buzz&quot;
+## [1] &quot;Fizz&quot;
+## [1] 7
+## [1] 8
+## [1] &quot;Fizz&quot;
+## [1] &quot;Buzz&quot;
+## [1] 11
+## [1] &quot;Fizz&quot;
+## [1] 13
+## [1] 14
+## [1] &quot;FizzBuzz&quot;</code></pre>
+<pre class="r"><code>fizzbuzz(&quot;Hello,world&quot;)</code></pre>
+<pre><code>## [1] &quot;Hello,world is not a number!&quot;</code></pre>
+<pre class="r"><code>fizzbuzz(Inf)</code></pre>
+<pre><code>## [1] &quot;Please input an integer&quot;</code></pre>
+<pre class="r"><code>fizzbuzz(2.3)</code></pre>
+<pre><code>## [1] &quot;2.3 is not an integer!&quot;</code></pre></li>
 </ol>
 </div>
 <div id="q3.-rcpp" class="section level2">
@@ -259,22 +279,18 @@ $(document).ready(function () {
 ##   for(int i = 0; i &lt; n; ++i) {
 ##     char* arry = nums[i];
 ##     int c = 0;
-##     if (strlen(arry) == 1 &amp;&amp; arry[0] == '0')
-##     {
+##     if (strlen(arry) == 1 &amp;&amp; arry[0] == '0') {
 ##       c = 0;
 ##     }
-##     else
-##     {
+##     else {
 ##       float temp = atof(arry);
-##       if (temp == 0)
-##       {
-##         std::cout &lt;&lt; &quot;Not a number!&quot; &lt;&lt; std::endl;
+##       if (temp == 0) {
+##         Rcout &lt;&lt; &quot;Not a number!&quot; &lt;&lt; std::endl;
 ##         continue;
 ##       }
-##       else{
-##         if (atoi(arry) - atof(arry) != 0)
-##         {
-##           std::cout &lt;&lt; &quot;Please input an integer!&quot; &lt;&lt; std::endl;
+##       else {
+##         if (atoi(arry) - atof(arry) != 0) {
+##           Rcout &lt;&lt; &quot;Please input an integer!&quot; &lt;&lt; std::endl;
 ##           continue;
 ##         }
 ##         else
@@ -282,13 +298,13 @@ $(document).ready(function () {
 ##       }
 ##     }
 ##     if (c % 5 == 0 &amp;&amp; c % 3 == 0)
-##       std::cout &lt;&lt; &quot;FizzBuzz&quot; &lt;&lt; std::endl;
+##       Rcout &lt;&lt; &quot;FizzBuzz&quot; &lt;&lt; std::endl;
 ##     else if (c % 3 == 0)
-##       std::cout &lt;&lt; &quot;Fizz&quot; &lt;&lt; std::endl;
+##       Rcout &lt;&lt; &quot;Fizz&quot; &lt;&lt; std::endl;
 ##     else if (c % 5 == 0)
-##       std::cout &lt;&lt; &quot;Buzz&quot; &lt;&lt; std::endl;
+##       Rcout &lt;&lt; &quot;Buzz&quot; &lt;&lt; std::endl;
 ##     else
-##       std::cout &lt;&lt; c &lt;&lt; std::endl;
+##       Rcout &lt;&lt; c &lt;&lt; std::endl;
 ##     
 ##   }
 ## }</code></pre>
@@ -296,7 +312,25 @@ $(document).ready(function () {
 <pre class="r"><code>library(Rcpp)
 sourceCpp('fizzbuzz.cpp')</code></pre>
 <pre><code>## Warning in readLines(file, skipNul = TRUE): incomplete final line found on
-## '/home/yunh/biostat-m280-2019-winter/hw2/../DESCRIPTION'</code></pre></li>
+## '/home/yunh/biostat-m280-2019-winter/hw2/../DESCRIPTION'</code></pre>
+<pre class="r"><code>fzbz(c(5:15))</code></pre>
+<pre><code>## Buzz
+## Fizz
+## 7
+## 8
+## Fizz
+## Buzz
+## 11
+## Fizz
+## 13
+## 14
+## FizzBuzz</code></pre>
+<pre class="r"><code>fzbz(&quot;Hello,world&quot;)</code></pre>
+<pre><code>## Not a number!</code></pre>
+<pre class="r"><code>fzbz(Inf)</code></pre>
+<pre><code>## Please input an integer!</code></pre>
+<pre class="r"><code>fzbz(2.3)</code></pre>
+<pre><code>## Please input an integer!</code></pre></li>
 </ol>
 </div>
 

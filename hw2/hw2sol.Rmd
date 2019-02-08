@@ -45,6 +45,7 @@ The FizzBuzz test is a common programming interview question used to establish i
 
     Let us test `FizzBuzz.R`:
     ```{r}
+    source("FizzBuzz.R")
     fizzbuzz(c(5:15))
     fizzbuzz("Hello,world")
     fizzbuzz(Inf)
