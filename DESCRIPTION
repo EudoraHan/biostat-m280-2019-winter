@@ -1,11 +1,8 @@
-Title: "Biostat M280 Homework 2--FizzBuzz Game"
-Version: 0.1.0
+Title: FizzBuzz game
 Date: 2019-02-05
 Author: Yun Han <yunh@g.ucla.edu>
 URL: https://github.com/EudoraHan/biostat-m280-2019-winter
-Output: html_document
-Imports: 
-  Rcpp
-  rmarkdown
 
-
+Imports:
+    rmarkdown
+    Rcpp
