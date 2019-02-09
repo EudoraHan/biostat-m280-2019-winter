@@ -1,4 +1,4 @@
-#FizzBuzz Test
+# FizzBuzz Test
 # Check if the input is valid
 # For multiples of 3 print "Fizz"
 # For multiples of 5 print "Buzz"
@@ -7,13 +7,13 @@
 fizzbuzz = function(x) {
   for (i in x) {
     if (!is.numeric(i)) {
-      print (paste(i, "is not a number!" ))
+      print(paste(i, "is not a number!"))
     }
     else if (is.na(i) | is.infinite(i)) {
-      print ("Please input an integer")
+      print("Please input an integer")
     }
     else if (i %% 1 != 0) {
-      print (paste(i, "is not an integer!" ))
+      print(paste(i, "is not an integer!"))
     }
     else {
       i <- as.integer(i)

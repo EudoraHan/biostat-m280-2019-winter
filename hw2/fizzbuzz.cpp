@@ -3,11 +3,11 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-void fzbz(StringVector nums) {
+void fzbz (StringVector nums) {
   int n = nums.size();
   
-  for(int i = 0; i < n; ++i) {
-    char* arry = nums[i];
+  for (int i = 0; i < n; ++i) {
+    char * arry = nums[i];
     int c = 0;
     if (strlen(arry) == 1 && arry[0] == '0') {
       c = 0;

@@ -36,7 +36,9 @@ The FizzBuzz test is a common programming interview question used to establish i
 
     This is not a terribly complex or difficult task, and solutions in R and many other languages are easily Googleable - the point of this exercise is again to get used to the workflow and tools: RStudio, RMarkdown, Git/GitHub, Travis, etc.
     
-    **Solution:** Here is my `FizzBuzz` code:
+    **Solution:** To solve this problem, we need to check if the input is valid at first. If the input is not a numeric or not an integer, the function will remind you to input an integer. Then we can use the modulo operator to deal with this problem.
+    
+    Here is my `FizzBuzz` code:
     ```{bash }
     cat FizzBuzz.R
     ```
