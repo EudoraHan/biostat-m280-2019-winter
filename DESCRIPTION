@@ -1,0 +1,8 @@
+Title: FizzBuzz game
+Date: 2019-02-05
+Author: Yun Han <yunh@g.ucla.edu>
+URL: https://github.com/EudoraHan/biostat-m280-2019-winter
+
+Imports:
+    rmarkdown
+    Rcpp

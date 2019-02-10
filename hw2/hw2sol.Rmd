@@ -1,0 +1,76 @@
+---
+title: "Biostat M280 Homework 2"
+author: "Yun Han <yunh@g.ucla.edu>"
+subtitle: Due Feb 8 @ 11:59PM
+output: html_document
+---
+
+Develop branch build status: [![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=develop)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
+
+Master branch build status: [![Build Status](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter.svg?token=XiFHfxYNrzo9Cf97wLfb&branch=master)](https://travis-ci.com/EudoraHan/biostat-m280-2019-winter)
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+
+## Q1. Travis CI
+
+1. Read the blog post [_Adding CI To RMarkdown Documents_](http://www.goring.org/resources/Adding_CI_To_RMarkdown.html) by Simon Goring. Understand what is continuous integration (CI) and why we need CI.
+
+2. Set up Travis CI for your homework 2 solution, e.g., `hw2sol.Rmd`. Graders will look for a CI passing badge on the `README.Rmd` page of your repository:
+
+
+
+## Q2. FizzBuzz Test
+
+The FizzBuzz test is a common programming interview question used to establish if a candidate can actually program in a language that they claim experience in. The problem statement is as follows:
+
+> "Write a program that given a list of numbers as input, prints each number on their own line. But for multiples of three print "Fizz" instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz”."
+
+1. Your goal here is to implement FizzBuzz as an R function called `fizzbuzz`. Your fizzbuzz function should conform to the description provided above in terms of output and accept an integer argument, which can either be a scalar or vector. As such, your function should correctly print `Fizz`, `Buzz`, `FizzBuzz`, or the actual number for each integer supplied on a separate line. You should program defensively - validate any input and make sure that you have a sane response to any invalid input.
+
+    You must also include a write up of your implementation that broadly describes how you approached the problem and constructed your solution (think something along the lines of the methods section of a journal article).
+
+    This is not a terribly complex or difficult task, and solutions in R and many other languages are easily Googleable - the point of this exercise is again to get used to the workflow and tools: RStudio, RMarkdown, Git/GitHub, Travis, etc.
+    
+    **Solution:** To solve this problem, we need to check if the input is valid at first. If the input is not a numeric or not an integer, the function will remind you to input an integer. Then we can use the modulo operator to deal with this problem.
+    
+    Here is my `FizzBuzz` code:
+    ```{bash }
+    cat FizzBuzz.R
+    ```
+    
+2. Use your FizzBuzz function to display the correct output for a variety of inputs, make sure to show what happens for both good and bad input. 
+
+    Let us test `FizzBuzz.R`:
+    ```{r}
+    source("FizzBuzz.R")
+    fizzbuzz(c(5:15))
+    fizzbuzz("Hello,world")
+    fizzbuzz(Inf)
+    fizzbuzz(2.3)
+    ```
+
+## Q3. Rcpp
+
+1. Read the online book [_Rcpp For Everyone_](https://teuder.github.io/rcpp4everyone_en/) by Masaki E. Tsuda.
+
+2. Re-do FizzBuzz test using Rcpp. 
+
+    **Solution:** Here is my `FizzBuzz` test using Rcpp:
+    ```{bash }
+    cat fizzbuzz.cpp
+    ```
+
+    Let's complie the code and test the function.
+    ```{r}
+    library(Rcpp)
+    sourceCpp('fizzbuzz.cpp')
+    fzbz(c(5:15))
+    fzbz("Hello,world")
+    fzbz(Inf)
+    fzbz(2.3)
+    ```
