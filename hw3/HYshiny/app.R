@@ -1,7 +1,7 @@
 library(shiny)
-library(shinythemes)
 library(tidyverse)
 library(ggplot2)
+library(shinythemes)
 
 # Imput Data
 totpay <- readRDS("TotalPay.rds")
@@ -12,66 +12,79 @@ cost <- readRDS("HighCost.rds")
 
 # UI part 
 ui <- navbarPage(title = "LA Employee Payroll",
-  theme = shinytheme("Flatly"),
-  tabPanel("Total Payroll",
-           titlePanel("Total payroll by LA city"),
-           plotOutput(outputId = "Totalpay")),
-  
-  tabPanel("Who Earned Most",
-           titlePanel("Who Earned Most?"),
-           sidebarLayout(
-             sidebarPanel(
-               numericInput(inputId = "num1",
-                            label = "Number of highest paid employees",
-                            value = 10),
-               selectInput(inputId = "Year1",
-                           label = "Year:",
-                           choices = c("2017", "2016", "2015", "2014", "2013"), selected = "2017")
-             ),
-             mainPanel(tableOutput(outoutId = "Highpay"))
-           )
-  ),
-  tabPanel("Which Departments Earned Most",
-           titlePanel("Which Departments Earned Most?"),
-           sidebarLayout(
-             sidebarPanel(
-               numericInput(inputId = "num2",
-                            label = "Number of department:",
-                            value = 5),
-               selectInput(inputId = "Year2",
-                           label = "Year:",
-                           choices = c("2017", "2016", "2015", "2014", "2013"), selected = "2017"),
-               radioButtons(inputId = "method",
-                           label = "Methods:",
-                           choices = c("Mean", "Median"), "Median")
-             ),
-             mainPanel(tableOutput(outoutId = "Mpay"))
-           )
-  ),
-  tabPanel("Which Departments Cost Most",
-           titlePanel("Which Departments Cost Most?"),
-           sidebarLayout(
-             sidebarPanel(
-               numericInput(inputId = "num3",
-                            label = "Number of department:",
-                            value = 5),
-               selectInput(inputId = "Year3",
-                           label = "Year:",
-                           choices = c("2017", "2016", "2015", "2014", "2013"), selected = "2017")
-             ),
-             mainPanel(tableOutput(outoutId = "Highcost"))
-           )
-  )
-  
-                
+                 theme = shinytheme("flatly"),
+                 tabPanel("Total Payroll",
+                          titlePanel("Total payroll by LA city"),
+                          plotOutput(outputId = "Totalpay")
+                 ),
+                 
+                 tabPanel("Who Earned Most",
+                          titlePanel("Who Earned Most?"),
+                          sidebarLayout(
+                            sidebarPanel(
+                              numericInput(inputId = "num1",
+                                           label = "Number of highest paid employees;",
+                                           value = 10),
+                              selectInput(inputId = "Year1",
+                                          label = "Year:",
+                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          selected = "2017")
+                            ),
+                            
+                            mainPanel(tableOutput(outputId = "Highpay"))
+                          )
+                 ),
+                 
+                 tabPanel("Which Departments Earned Most",
+                          titlePanel("Which Departments Earned Most?"),
+                          sidebarLayout(
+                            sidebarPanel(
+                              numericInput(inputId = "num2",
+                                           label = "Number of department:",
+                                           value = 5),
+                              selectInput(inputId = "Year2",
+                                          label = "Year:",
+                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          selected = "2017"),
+                              radioButtons(inputId = "method",
+                                           label = "Methods:",
+                                           choices = c("Mean", "Median"), "Median")
+                            ),
+                            mainPanel(tableOutput(outputId = "Mpay"))
+                          )
+                 ),
+                 
+                 tabPanel("Which Departments Cost Most",
+                          titlePanel("Which Departments Cost Most?"),
+                          sidebarLayout(
+                            sidebarPanel(
+                              numericInput(inputId = "num3",
+                                           label = "Number of department:",
+                                           value = 5),
+                              selectInput(inputId = "Year3",
+                                          label = "Year:",
+                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          selected = "2017")
+                            ),
+                            mainPanel(tableOutput(outputId = "Highcost"))
+                          )
+                 )
+                 
+                 
 )
 
 # server part
 server <- function(input, output) {
   # For question 1
   output$Totalpay <- renderPlot({
-    ggplot(data = totpay, aes(x = Year, y = payment, fill = class)) +
-      geom_bar(stat = "identity")
+    ggplot(data = totpay, aes(x = Year, y = Payment, fill = class)) +
+      geom_col() +
+      labs(x = "Year", y = "Pay(million)") +
+      scale_fill_manual(values = c("#D55E00", "#009E73", "#0072B2"),
+                        name="Type of Pay",
+                        breaks=c("TotBasepay", "TotOverpay", "TotOtherpay"),
+                        labels=c("Total Basepay", "Total Overtimepay", 
+                                 "Total Otherpay"))
   })
   
   # For question 2
