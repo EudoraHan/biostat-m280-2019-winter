@@ -77,12 +77,12 @@ ui <- navbarPage(title = "LA Employee Payroll",
 server <- function(input, output) {
   # For question 1
   output$Totalpay <- renderPlot({
-    ggplot(data = totpay, aes(x = Year, y = Payment, fill = class)) +
+    ggplot(data = totpay, aes(x = Year, y = Payment/1000000, fill = Type)) +
       geom_col() +
       labs(x = "Year", y = "Pay(million)") +
       scale_fill_manual(values = c("#D55E00", "#009E73", "#0072B2"),
                         name="Type of Pay",
-                        breaks=c("TotBasepay", "TotOverpay", "TotOtherpay"),
+                        breaks=c("Tbase", "Tover", "Tother"),
                         labels=c("Total Basepay", "Total Overtimepay", 
                                  "Total Otherpay"))
   })
