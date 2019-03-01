@@ -25,7 +25,7 @@ The `/home/m280data/la_payroll/City_Employee_Payroll.csv` file on teaching serve
 
 5. **Which departments cost most?** Visualize the total payroll, with breakdown into base pay, overtime pay, and other pay, of top $n$ expensive departments. User specifies $n$ (default 5) and year (default 2017).
 
-6. Visualize any other information you are interested in.
+6. Visualize any other information you are interested in.**Which department have the hightest permanent bonus pay?** User specifies $n$ (default 5) and year (default 2017).
 
 7. Publish your Shiny app to <https://www.shinyapps.io> and share the link.
 
@@ -35,16 +35,128 @@ The SQLite database `/home/m280data/la_parking/LA_Parking_Citations.sqlite` on t
 
 1. How many tickets are in this data set? Which time period do these tickets span? Which years have most data?
 
-0. When (which hour, weekday, month day, and month) are you most likely to get a ticket and when are you least likely to get a ticket?
+    ```{r}
+library(DBI)
+library(RSQLite)
+library(tidyverse)
+library(dplyr)
+# connecting the dataset
+con = dbConnect(RSQLite::SQLite(),
+                "/home/m280data/la_parking/LA_Parking_Citations.sqlite")
+dbListTables(con)
+latix <- dplyr::tbl(con, "latix")
+    ```
+    
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Ticket_number)) %>% count() 
+    ```
+* There are `7656362` tickets in this data set after removing NA values.    
+    ```{r}
+data <- latix %>%
+  filter(!is.na(Issue_Year), !is.na(Issue_Month), 
+         !is.na(Issue_Day), !is.na(Issue_Hour), 
+         !is.na(Issue_Minute), !is.na(Issue_Wday)) 
 
-0. Which car makes received most citations?
+data %>% arrange(desc(Issue_Year), desc(Issue_Month), desc(Issue_Day), 
+                 desc(Issue_Hour), desc(Issue_Minute)) %>%
+  select(Issue_Year, Issue_Month, Issue_Day, Issue_Hour, Issue_Minute) %>%
+  collect() %>%
+  slice(c(1, n()))
+    ```
+* The time period is `from 2015-07-02 01:00:00` to `2019-01-25 23:58:00 `.
+    ```{r}
+data %>% group_by(Issue_Year) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    ```
+* Year `2017` has the most data.
 
-0. How many different colors of cars were ticketed? Which color attracted most tickets?
+2. When (which hour, weekday, month day, and month) are you most likely to get a ticket and when are you least likely to get a ticket?
 
-0. What are the most common ticket types?
+     **Solution:**
+    ```{r}
+# Hour
+data %>% group_by(Issue_Hour) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
 
-0. How much money was collected on parking tickets in 2016, 2017 and 2018?
+# Weekday
+data %>% group_by(Issue_Wday) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
 
-0. If you've been ticketed in LA County, did you find your ticket in this data set?
+# Month day
+data %>% group_by(Issue_Day) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
 
-0. Read the blog <http://www.brettrics.com/9-million-parking-tickets-la/> and try to reproduce plots using your data.
+# Month
+data %>% group_by(Issue_Month) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
+    ```
+    
+3. Which car makes received most citations?
+
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Make)) %>% 
+  group_by(Make) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    ```
+* The `TOYOTA` received most citations.
+
+4. How many different colors of cars were ticketed? Which color attracted most tickets?
+
+     **Solution:**
+    ```{r}
+colordata <- latix %>% filter(!is.na(Color)) %>% 
+  group_by(Color) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num))
+
+colordata %>% summarise(num = n())
+colordata %>% head(1)
+    ```
+* There are `103` different colors of cars were ticketed. The `Black` car attracted most tickets.
+
+5. What are the most common ticket types?
+
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Violation_Description)) %>% 
+  group_by(Violation_Description) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    ```
+* The most common ticket types is `NO PARK/STREET CLEAN`;
+
+6. How much money was collected on parking tickets in 2016, 2017 and 2018?
+
+     **Solution:**
+    ```{r}
+latix %>% 
+  select(Issue_Year, Fine_amount) %>%
+  filter(!is.na(Issue_Year), !is.na(Fine_amount)) %>%
+  group_by(Issue_Year) %>%
+  summarise(total = sum(Fine_amount, na.rm = TRUE)) 
+    ```
+    
+7. If you've been ticketed in LA County, did you find your ticket in this data set?
+
+     **Solution:**I don't have a car in LA county.
+
+8. Read the blog <http://www.brettrics.com/9-million-parking-tickets-la/> and try to reproduce plots using your data.
