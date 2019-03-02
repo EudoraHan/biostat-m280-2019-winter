@@ -1,0 +1,219 @@
+---
+title: "Biostat M280 Homework 3"
+author: "Yun Han <yunh@g.ucla.edu>"
+subtitle: Due Mar 1 @ 11:59PM
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Use tidyverse and bash to explore following two data sets.
+
+## Q1 LA City Employee Payroll
+
+The `/home/m280data/la_payroll/City_Employee_Payroll.csv` file on teaching server contains payroll information of LA City employees in years 2013-2018. It was downloaded from [LA City Controller's Office](https://controllerdata.lacity.org/Payroll/City-Employee-Payroll/pazn-qyym). Make a Shiny app to facilitate visualization of this data. 
+
+1. For efficiency of the Shiny app, you should first pre-process, pare down, tidy, and save the data, e.g., as a compressed RDS file, to be used in the app.
+    **Solution:**
+    Here is my code for pre-processing.
+    ```{bash }
+    cat Data.R
+    ```
+
+2. **Total payroll by LA City**. Visualize the total LA City payroll of each year, with breakdown into base pay, overtime pay, and other pay.
+
+3. **Who earned most?** Visualize the payroll information (total payment with breakdown into base pay, overtime pay, and other pay, Department, Job Title) of the top $n$ highest paid LA City employees in a specific year. User specifies $n$ (default 10) and year (default 2017).
+
+4. **Which departments earn most?** Visualize the mean or median payroll, with breakdown into base pay, overtime pay, and other pay, of top $n$ earning departments. User specifies $n$ (default 5), year (default 2017), and method (mean or median, default median).
+
+5. **Which departments cost most?** Visualize the total payroll, with breakdown into base pay, overtime pay, and other pay, of top $n$ expensive departments. User specifies $n$ (default 5) and year (default 2017).
+
+6. Visualize any other information you are interested in.**Which department have the highest permanent bonus pay?** User specifies $n$ (default 5) and year (default 2017).
+
+7. Publish your Shiny app to <https://www.shinyapps.io> and share the link.
+
+    **Solution:** 
+    Here is my link: https://yunhan.shinyapps.io/HYshiny/. The first four tabs corresponds to the four questions. The last tab shows the highest permanent bonus pay department.
+
+## Q2 LA City Parking War
+
+The SQLite database `/home/m280data/la_parking/LA_Parking_Citations.sqlite` on teaching server contains information about parking tickets in LA City. It was downloaded from [LA Open Data Portal](https://data.lacity.org/A-Well-Run-City/Parking-Citations/wjz9-h9np). Connect to the database and answer following questions using plots and summary statistics. In this exercise, you are **not** allowed to load whole data into memory. Use the _transform in database, plot in R_ strategy.
+
+1. How many tickets are in this data set? Which time period do these tickets span? Which years have most data?
+
+    ```{r}
+library(DBI)
+library(RSQLite)
+library(tidyverse)
+library(dplyr)
+# Connecting 
+con = dbConnect(RSQLite::SQLite(),
+                "/home/m280data/la_parking/LA_Parking_Citations.sqlite")
+dbListTables(con)
+latix <- dplyr::tbl(con, "latix")
+    ```
+    
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Ticket_number)) %>% count() 
+    ```
+* There are `7656362` tickets in this data set after removing NA values.
+
+    ```{r}
+data <- latix %>%
+  filter(!is.na(Issue_Year), !is.na(Issue_Month), 
+         !is.na(Issue_Day), !is.na(Issue_Hour), 
+         !is.na(Issue_Minute), !is.na(Issue_Wday)) 
+
+data %>% arrange(desc(Issue_Year), desc(Issue_Month), desc(Issue_Day), 
+                 desc(Issue_Hour), desc(Issue_Minute)) %>%
+  select(Issue_Year, Issue_Month, Issue_Day, Issue_Hour, Issue_Minute) %>%
+  collect() %>%
+  slice(c(1, n()))
+    ```
+* The time period is `from 2015-07-02 01:00:00` to `2019-01-25 23:58:00 `.
+
+    ```{r}
+data %>% group_by(Issue_Year) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    
+data %>%
+  group_by(Issue_Year) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Year, y = n))
+    ```
+* From the barchart and the table we can see that year `2017` has the most data.
+
+2. When (which hour, weekday, month day, and month) are you most likely to get a ticket and when are you least likely to get a ticket?
+
+     **Solution:**
+    ```{r}
+# Hour
+data %>% group_by(Issue_Hour) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
+data %>%
+  group_by(Issue_Hour) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Hour, y = n))
+    ```
+
+* Based on the summary of count and barchart, it most likely to get a ticket at `12:00 PM` and least likely to get a ticket at `5:00 AM`.
+
+    ```{r}
+# Weekday
+data %>% group_by(Issue_Wday) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
+data %>%
+  group_by(Issue_Wday) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Wday, y = n))
+    ```
+
+* Based on the summary of count and barchart, it most likely to get a ticket at `Wednesday` and least likely to get a ticket at `Monday`.
+    
+    ```{r}
+# Month day
+data %>% group_by(Issue_Day) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
+data %>%
+  group_by(Issue_Day) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Day, y = n))
+    ```
+
+* Based on the summary of count and barchart, it most likely to get a ticket at `13th` and least likely to get a ticket at `31st`.
+
+    ```{r}
+# Month
+data %>% group_by(Issue_Month) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  collect() %>%
+  slice(c(1, n()))
+data %>%
+  group_by(Issue_Month) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Month, y = n))
+    ```
+
+* Based on the summary of count and barchart, it most likely to get a ticket at `August` and least likely to get a ticket at `February`.
+    
+3. Which car makes received most citations?
+
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Make)) %>% 
+  group_by(Make) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    ```
+* The `TOYOTA` received most citations.
+
+4. How many different colors of cars were ticketed? Which color attracted most tickets?
+
+     **Solution:**
+    ```{r}
+colordata <- latix %>% filter(!is.na(Color)) %>% 
+  group_by(Color) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num))
+
+colordata %>% summarise(num = n())
+colordata %>% head(1)
+    ```
+* There are `103` different colors of cars were ticketed. The `Black` car attracted most tickets.
+
+5. What are the most common ticket types?
+
+     **Solution:**
+    ```{r}
+latix %>% filter(!is.na(Violation_Description)) %>% 
+  group_by(Violation_Description) %>%
+  summarise(num = n()) %>%
+  arrange(desc(num)) %>%
+  head(1)
+    ```
+* The most common ticket types is `NO PARK/STREET CLEAN`;
+
+6. How much money was collected on parking tickets in 2016, 2017 and 2018?
+
+     **Solution:**
+    ```{r}
+latix %>% 
+  select(Issue_Year, Fine_amount) %>%
+  filter(!is.na(Issue_Year), !is.na(Fine_amount)) %>%
+  group_by(Issue_Year) %>%
+  summarise(total = sum(Fine_amount, na.rm = TRUE)) %>%
+  collect() %>% slice(c(2, 3, 4))
+    ```
+* Money collected on parking ticktets in 2016, 2017 and 2018 are `$152145538`, `$157122489`, `$138875787` respectively.
+
+7. If you've been ticketed in LA County, did you find your ticket in this data set?
+
+     **Solution:**I don't have a car in LA county.
+
+8. Read the blog <http://www.brettrics.com/9-million-parking-tickets-la/> and try to reproduce plots using your data.
