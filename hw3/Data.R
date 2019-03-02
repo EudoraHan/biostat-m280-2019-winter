@@ -14,41 +14,52 @@ write_rds(TotalPay, "TotalPay.rds")
 
 # Dataset for Question2
 HighPay <- payroll %>%
-  select(Year, `Department Title`, `Job Class Title`, `Total Payments`, `Base Pay`,
-         `Overtime Pay`, `Other Pay (Payroll Explorer)`) %>%
+  select(Year, `Department Title`, `Job Class Title`, `Total Payments`, 
+         `Base Pay`, `Overtime Pay`, `Other Pay (Payroll Explorer)`) %>%
   arrange(desc(`Total Payments`))
 write_rds(HighPay, "HighPay.rds")          
-         
+
 # Dataset for Question3
 MeanPay <- payroll %>%
   group_by(Year, `Department Title`) %>%
-  summarise(MeanTotal = mean(`Total Payments`, na.rm = TRUE),
-            MeanBase = mean(`Base Pay`, na.rm = TRUE),
-            MeanOver = mean(`Overtime Pay`, na.rm = TRUE),
-            MeanOther = mean(`Other Pay (Payroll Explorer)`, na.rm = TRUE)) %>%
-  arrange(desc(MeanTotal))
+  summarise(`Mean Total Pay` = mean(`Total Payments`, na.rm = TRUE),
+            `Mean Base Pay` = mean(`Base Pay`, na.rm = TRUE),
+            `Mean Overtime Pay` = mean(`Overtime Pay`, na.rm = TRUE),
+            `Mean Other Pay` = mean(`Other Pay (Payroll Explorer)`, 
+                                    na.rm = TRUE)) %>%
+  arrange(desc(`Mean Total Pay`))
 write_rds(MeanPay, "MeanPay.rds") 
 
 MedianPay <- payroll %>%
   group_by(Year, `Department Title`) %>%
-  summarise(MedianTotal = median(`Total Payments`, na.rm = TRUE),
-            MedianBase = median(`Base Pay`, na.rm = TRUE),
-            MedianOver = median(`Overtime Pay`, na.rm = TRUE),
-            MedianOther = median(`Other Pay (Payroll Explorer)`, na.rm = TRUE)) %>%
-  arrange(desc(MedianTotal))
+  summarise(`Median Total Pay` = median(`Total Payments`, na.rm = TRUE),
+            `Median Base Pay` = median(`Base Pay`, na.rm = TRUE),
+            `Median Overtime Pay` = median(`Overtime Pay`, na.rm = TRUE),
+            `Median Other Pay` = median(`Other Pay (Payroll Explorer)`, 
+                                        na.rm = TRUE)) %>%
+  arrange(desc(`Median Total Pay`))
 write_rds(MedianPay, "MedianPay.rds") 
 
 # Dateset for Question4
 HighCost <- payroll %>%
   group_by(Year, `Department Title`) %>%
-  summarise(sumTotal = sum(`Total Payments`, na.rm = TRUE),
-            sumBase = sum(`Base Pay`, na.rm = TRUE),
-            sumOver = sum(`Overtime Pay`, na.rm = TRUE),
-            sumOther = sum(`Other Pay (Payroll Explorer)`, na.rm = TRUE),
-            sumCost = sum(`Average Benefit Cost`, na.rm = TRUE)) %>%
-  arrange(desc(sumCost)) %>%
-  select(Year, `Department Title`, sumTotal, sumBase, 
-         sumOver, sumOther, sumCost)
+  summarise(`Total Pay` = sum(`Total Payments`, na.rm = TRUE),
+            `Base Pay` = sum(`Base Pay`, na.rm = TRUE),
+            `Overtime Pay` = sum(`Overtime Pay`, na.rm = TRUE),
+            `Other Pay` = sum(`Other Pay (Payroll Explorer)`, na.rm = TRUE),
+            `Total Cost` = sum(`Average Benefit Cost`, na.rm = TRUE)) %>%
+  arrange(desc(`Total Cost`)) %>%
+  select(Year, `Department Title`, `Total Cost`, `Base Pay`, 
+         `Overtime Pay`, `Other Pay`, `Total Cost`)
 write_rds(HighCost, "HighCost.rds")
 
-
+# Which department have the hightest permanent bonus pay?
+bonus <- payroll %>%
+  group_by(Year, `Department Title`) %>%
+  summarise(`Bonus` = sum(`Permanent Bonus Pay`, na.rm = TRUE)) %>%
+  arrange(desc(`Bonus`)) %>%
+  select(Year, `Department Title`, `Bonus`)
+write_rds(bonus, "bonus.rds")
+  
+  
+  

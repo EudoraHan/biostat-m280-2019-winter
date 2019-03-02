@@ -24,11 +24,13 @@ ui <- navbarPage(title = "LA Employee Payroll",
                           sidebarLayout(
                             sidebarPanel(
                               numericInput(inputId = "num1",
-                                           label = "Number of highest paid employees;",
+                                           label = "Number of highest paid 
+                                           employees;",
                                            value = 10),
                               selectInput(inputId = "Year1",
                                           label = "Year:",
-                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          choices = c("2017", "2016", "2015", 
+                                                      "2014", "2013"), 
                                           selected = "2017")
                             ),
                             
@@ -45,11 +47,13 @@ ui <- navbarPage(title = "LA Employee Payroll",
                                            value = 5),
                               selectInput(inputId = "Year2",
                                           label = "Year:",
-                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          choices = c("2017", "2016", "2015",
+                                                      "2014", "2013"), 
                                           selected = "2017"),
                               radioButtons(inputId = "method",
                                            label = "Methods:",
-                                           choices = c("Mean", "Median"), "Median")
+                                           choices = c("Mean", "Median"),
+                                           "Median")
                             ),
                             mainPanel(tableOutput(outputId = "Mpay"))
                           )
@@ -64,7 +68,8 @@ ui <- navbarPage(title = "LA Employee Payroll",
                                            value = 5),
                               selectInput(inputId = "Year3",
                                           label = "Year:",
-                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          choices = c("2017", "2016", "2015", 
+                                                      "2014", "2013"), 
                                           selected = "2017")
                             ),
                             mainPanel(tableOutput(outputId = "Highcost"))
@@ -72,7 +77,8 @@ ui <- navbarPage(title = "LA Employee Payroll",
                  ),
                  
                  tabPanel("Which Departments have Highest Bonus",
-                          titlePanel("Which Departments have Highest Permanent Bonus Pay?"),
+                          titlePanel("Which Departments have Highest 
+                                     Permanent Bonus Pay?"),
                           sidebarLayout(
                             sidebarPanel(
                               numericInput(inputId = "num4",
@@ -80,7 +86,8 @@ ui <- navbarPage(title = "LA Employee Payroll",
                                            value = 5),
                               selectInput(inputId = "Year4",
                                           label = "Year:",
-                                          choices = c("2017", "2016", "2015", "2014", "2013"), 
+                                          choices = c("2017", "2016", "2015", 
+                                                      "2014", "2013"), 
                                           selected = "2017")
                             ),
                             mainPanel(tableOutput(outputId = "Bonus"))
@@ -104,14 +111,14 @@ server <- function(input, output) {
                                  "Total Otherpay"))
   })
   
-  # For question 2
+  # Who earned most?
   output$Highpay <- renderTable({
     highp$Year <- format(highp$Year, digits = 0)
     highp %>% filter(Year == input$Year1) %>%
       head(input$num1)
   })
   
-  #Which departments earn most
+  # Which departments earn most
   output$Mpay <- renderTable({
     meanp$Year <- format(meanp$Year, digits = 0)
     medp$Year <- format(medp$Year, digits = 0)
@@ -124,14 +131,14 @@ server <- function(input, output) {
     }
   })
   
-  ##Which departments cost most?
+  ## Which departments cost most?
   output$Highcost <- renderTable({
     cost$Year <- format(cost$Year, digits = 0)
     cost %>% filter(Year == input$Year3) %>%
       head(input$num3)
   })
   
-  ##
+  ## Which departments have the hightest permanent bonus pay?
   output$Bonus <- renderTable({
     bonus$Year <- format(bonus$Year, digits = 0)
     bonus %>% filter(Year == input$Year4) %>%

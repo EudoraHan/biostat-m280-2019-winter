@@ -4,9 +4,9 @@ library(tidyverse)
 library(dplyr)
 
 # connecting the dataset
-con = dbConnect(RSQLite::SQLite(), "/home/m280data/la_parking/LA_Parking_Citations.sqlite")
+con = dbConnect(RSQLite::SQLite(), 
+                "/home/m280data/la_parking/LA_Parking_Citations.sqlite")
 dbListTables(con)
-
 latix <- dplyr::tbl(con, "latix")
 
 latix %>% print(width = Inf)
@@ -42,12 +42,26 @@ data %>% group_by(Issue_Hour) %>%
   collect() %>%
   slice(c(1, n()))
 
+data %>%
+  group_by(Issue_Hour) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Hour, y = n))
+
 # Wednesday Monday
 data %>% group_by(Issue_Wday) %>%
   summarise(num = n()) %>%
   arrange(desc(num)) %>%
   collect() %>%
   slice(c(1, n()))
+
+data %>%
+  group_by(Issue_Wday) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Wday, y = n))
 
 #  13  31
 data %>% group_by(Issue_Day) %>%
@@ -56,12 +70,27 @@ data %>% group_by(Issue_Day) %>%
   collect() %>%
   slice(c(1, n()))
 
-# August 2yue
+data %>%
+  group_by(Issue_Day) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Day, y = n))
+
+
+# 8  2
 data %>% group_by(Issue_Month) %>%
   summarise(num = n()) %>%
   arrange(desc(num)) %>%
   collect() %>%
   slice(c(1, n()))
+
+data %>%
+  group_by(Issue_Month) %>%
+  count() %>%
+  collect() %>%
+  ggplot() + 
+  geom_col(aes(x = Issue_Month, y = n))
 
 
 # Question 3 : Which car: "Toyota"
@@ -89,7 +118,12 @@ latix %>% filter(!is.na(Violation_Description)) %>%
   head(1)
 
 #Question 6: How much money was collected on parking tickets
-
+money <- latix %>% 
+  select(Issue_Year, Fine_amount) %>%
+  filter(!is.na(Issue_Year), !is.na(Fine_amount)) %>%
+  group_by(Issue_Year) %>%
+  summarise(total = sum(Fine_amount, na.rm = TRUE)) 
+money 
 
 
 
